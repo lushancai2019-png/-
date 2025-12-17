@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌍 国际站商家年度生意规划（2025复盘 → 2026推演）</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .card { margin-bottom: 1.2rem; }
+    .param-slider { margin: 1.2rem 0; }
+    .calc-step {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin: 0.8rem 0;
+      font-family: monospace;
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+    .highlight-number {
+      font-weight: bold;
+      color: #d32f2f;
+      font-size: 1.25em;
+    }
+    .footer-note {
+      background-color: #e9ecef;
+      padding: 1.2rem;
+      border-radius: 0.6rem;
+      margin-top: 2rem;
+    }
+    .unit-label {
+      font-size: 0.85em;
+      color: #6c757d;
+    }
+    .auto-field {
+      background-color: #e9ecef;
+    }
+    h2 { font-weight: bold; }
+  </style>
+</head>
+<body class="bg-light">
+<div class="container py-4">
+  <h2 class="text-center mb-3">🌍 国际站商家年度生意规划</h2>
+  <p class="text-center text-muted mb-4">
+    💱 所有金额单位：人民币（RMB），<strong>仅笔单价为美元（USD）</strong>｜汇率：1 USD = 7 RMB
+  </p>
+
+  <div class="row">
+    <!-- 左侧：2025年真实经营数据 -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">📌 2025年实际经营数据（请如实填写）</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">2025年总投入（RMB）</label>
+            <input type="number" class="form-control" id="spend2025RMB" value="350000" oninput="updateBase()">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">2025年总商机数</label>
+            <input type="number" class="form-control" id="leads2025" value="5000" oninput="updateBase()">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">2025年首单客户数</label>
+            <input type="number" class="form-control" id="firstCustomers2025" value="800" oninput="updateBase()">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">2025年复购率（%）</label>
+            <input type="number" step="0.1" class="form-control" id="repeatRateInput2025" value="33.3" oninput="updateBase()">
+            <div class="unit-label">有复购行为的客户占比（由您填写）</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">首年复购次数（次/人）</label>
+            <input type="number" step="0.1" class="form-control" id="repeatFreq2025" value="1.5" oninput="updateBase()">
+            <div class="unit-label">每个复购客户平均下单次数</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">2025年总销售额（RMB）</label>
+            <input type="number" class="form-control" id="revenue2025RMB" value="1400000" oninput="updateBase()">
+          </div>
+
+          <hr>
+          <h6>📊 系统自动计算（2025）</h6>
+          <div class="mb-2">
+            <label class="form-label">单商机成本（RMB）</label>
+            <input type="number" step="0.01" class="form-control auto-field" id="costPerLead2025RMB" readonly>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">首单转化率（%）</label>
+            <input type="number" step="0.1" class="form-control auto-field" id="convRate2025" readonly>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">复购笔数</label>
+            <input type="number" class="form-control auto-field" id="repeatOrders2025" readonly>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">总订单数</label>
+            <input type="number" class="form-control auto-field" id="totalOrders2025" readonly>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">笔单价（USD）</label>
+            <input type="number" step="0.1" class="form-control auto-field" id="ticket2025" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 中间：2026关键假设（新增单商机成本优化滑块） -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-success text-white">📈 2026关键假设（优化优质客户占比）</div>
+        <div class="card-body">
+          <div class="param-slider">
+            <label>笔单价上浮比例<span class="float-end highlight-number" id="ticketUpsideDisplay">+20.0%</span></label>
+            <input type="range" class="form-range" min="0" max="100" step="1" id="ticketUpsideSlider" value="20" oninput="updateProjection()">
+            <div class="unit-label">因聚焦高价值客户</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">2026笔单价（USD）</label>
+            <input type="number" step="0.1" class="form-control auto-field" id="ticket2026Display" readonly>
+          </div>
+
+          <div class="param-slider">
+            <label>首单转化率上浮比例<span class="float-end highlight-number" id="convUpsideDisplay">+25.0%</span></label>
+            <input type="range" class="form-range" min="0" max="100" step="1" id="convUpsideSlider" value="25" oninput="updateProjection()">
+            <div class="unit-label">因流量结构优化</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">2026首单转化率（%）</label>
+            <input type="number" step="0.1" class="form-control auto-field" id="convRate2026Display" readonly>
+          </div>
+
+          <!-- 新增：单商机成本优化滑块 -->
+          <div class="param-slider">
+            <label>单商机成本优化比例<span class="float-end highlight-number" id="leadCostOptDisplay">-10.0%</span></label>
+            <input type="range" class="form-range" min="-50" max="20" step="1" id="leadCostOptSlider" value="-10" oninput="updateProjection()">
+            <div class="unit-label">负值 = 成本下降（如使用保效产品）</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">2026单商机成本（RMB）</label>
+            <input type="number" step="0.01" class="form-control auto-field" id="costPerLead2026Display" readonly>
+          </div>
+
+          <hr class="my-3">
+          <div class="mb-3">
+            <label class="form-label">2026年计划投入（RMB）</label>
+            <input type="number" class="form-control" id="spend2026RMB" value="525000" oninput="updateProjection()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧：2026推演结果 -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-info text-white">🧮 2026销售推演结果</div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <h4>预计销售额：<br><span class="highlight-number" id="projectedRevenueRMB">¥2,100,000</span></h4>
+          </div>
+
+          <h6>🔍 计算过程：</h6>
+          <div class="calc-step" id="step1">1. 单商机成本(RMB) = ?</div>
+          <div class="calc-step" id="step2">2. 2026商机数 = ?</div>
+          <div class="calc-step" id="step3">3. 首单客户数 = ?</div>
+          <div class="calc-step" id="step4">4. 首单收入(RMB) = ?</div>
+          <div class="calc-step" id="step5">5. 复购收入(RMB) = ?</div>
+          <div class="calc-step" id="step6">6. 总销售额(RMB) = ?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部说明 -->
+  <div class="footer-note">
+    <h6>💡 规划逻辑说明</h6>
+    <ul>
+      <li><strong>2025数据由您提供</strong>：销售额、复购率等均为真实经营结果</li>
+      <li><strong>2026增长有依据</strong>：笔单价与转化率 = 2025基准 × (1 + 上浮比例)</li>
+      <li><strong>单商机成本可优化</strong>：通过保效产品或运营提效，成本可下降（如 -10%）</li>
+      <li><strong>复购模型延续2025</strong>：复购率与复购次数保持一致</li>
+      <li><strong>仅笔单价用 USD，其余金额统一用 RMB</strong>（汇率=7）</li>
+    </ul>
+    <p class="mb-0"><strong>✅ 本工具可用于：年度预算制定、团队目标对齐、平台资源申请</strong></p>
+  </div>
+</div>
+
+<script>
+  const EXCHANGE_RATE = 7;
+
+  function rmbToUsd(rmb) { return parseFloat(rmb) / EXCHANGE_RATE; }
+  function usdToRmb(usd) { return parseFloat(usd) * EXCHANGE_RATE; }
+
+  window.onload = function() {
+    updateBase();
+    updateProjection();
+  };
+
+  function updateBase() {
+    const spendRMB = parseFloat(document.getElementById('spend2025RMB').value) || 0;
+    const leads = parseFloat(document.getElementById('leads2025').value) || 1;
+    const firstCust = parseFloat(document.getElementById('firstCustomers2025').value) || 0;
+    const repeatRatePct = parseFloat(document.getElementById('repeatRateInput2025').value) || 0;
+    const repeatFreq = parseFloat(document.getElementById('repeatFreq2025').value) || 1.5;
+    const revenueRMB = parseFloat(document.getElementById('revenue2025RMB').value) || 0;
+
+    const repeatRate = repeatRatePct / 100;
+
+    const costPerLeadRMB = spendRMB / leads;
+    const convRate = leads > 0 ? (firstCust / leads) * 100 : 0;
+    const repeatOrders = firstCust * repeatRate * repeatFreq;
+    const totalOrders = firstCust + repeatOrders;
+    const revenueUSD = rmbToUsd(revenueRMB);
+    const ticketUSD = totalOrders > 0 ? revenueUSD / totalOrders : 0;
+
+    document.getElementById('costPerLead2025RMB').value = costPerLeadRMB.toFixed(2);
+    document.getElementById('convRate2025').value = convRate.toFixed(1);
+    document.getElementById('repeatOrders2025').value = Math.round(repeatOrders);
+    document.getElementById('totalOrders2025').value = Math.round(totalOrders);
+    document.getElementById('ticket2025').value = ticketUSD.toFixed(1);
+
+    updateProjection();
+  }
+
+  function updateProjection() {
+    // 获取2025基准数据
+    const spend2025RMB = parseFloat(document.getElementById('spend2025RMB').value) || 350000;
+    const leads2025 = parseFloat(document.getElementById('leads2025').value) || 5000;
+    const firstCust2025 = parseFloat(document.getElementById('firstCustomers2025').value) || 800;
+    const repeatRatePct2025 = parseFloat(document.getElementById('repeatRateInput2025').value) || 33.3;
+    const repeatFreq2025 = parseFloat(document.getElementById('repeatFreq2025').value) || 1.5;
+    const revenue2025RMB = parseFloat(document.getElementById('revenue2025RMB').value) || 1400000;
+
+    // 重新计算2025核心指标
+    const costPerLead2025RMB = spend2025RMB / leads2025;
+    const convRate2025 = leads2025 > 0 ? (firstCust2025 / leads2025) * 100 : 0;
+    const repeatOrders2025 = firstCust2025 * (repeatRatePct2025 / 100) * repeatFreq2025;
+    const totalOrders2025 = firstCust2025 + repeatOrders2025;
+    const ticket2025USD = totalOrders2025 > 0 ? rmbToUsd(revenue2025RMB) / totalOrders2025 : 0;
+
+    // 获取上浮比例
+    const ticketUpside = parseFloat(document.getElementById('ticketUpsideSlider').value) || 0;
+    const convUpside = parseFloat(document.getElementById('convUpsideSlider').value) || 0;
+    const leadCostOpt = parseFloat(document.getElementById('leadCostOptSlider').value) || 0; // 新增
+
+    // 计算2026假设值
+    const ticket2026USD = ticket2025USD * (1 + ticketUpside / 100);
+    const convRate2026 = convRate2025 * (1 + convUpside / 100);
+    const costPerLead2026RMB = costPerLead2025RMB * (1 + leadCostOpt / 100); // 新增：成本优化
+
+    // 更新中间面板显示
+    document.getElementById('ticketUpsideDisplay').textContent = `+${ticketUpside.toFixed(1)}%`;
+    document.getElementById('convUpsideDisplay').textContent = `+${convUpside.toFixed(1)}%`;
+    document.getElementById('leadCostOptDisplay').textContent = `${leadCostOpt >= 0 ? '+' : ''}${leadCostOpt.toFixed(1)}%`;
+    document.getElementById('ticket2026Display').value = ticket2026USD.toFixed(1);
+    document.getElementById('convRate2026Display').value = convRate2026.toFixed(1);
+    document.getElementById('costPerLead2026Display').value = costPerLead2026RMB.toFixed(2);
+
+    // 2026投入（RMB）
+    const spend2026RMB = parseFloat(document.getElementById('spend2026RMB').value) || 525000;
+
+    // 推演（全部金额以 RMB 为主）
+    const leads2026 = spend2026RMB / costPerLead2026RMB; // 使用优化后的成本
+    const firstCustomers2026 = leads2026 * (convRate2026 / 100);
+    const firstRevenueRMB = firstCustomers2026 * ticket2026USD * EXCHANGE_RATE;
+    const repeatOrders2026 = firstCustomers2026 * (repeatRatePct2025 / 100) * repeatFreq2025;
+    const repeatRevenueRMB = repeatOrders2026 * ticket2026USD * EXCHANGE_RATE;
+    const totalRevenueRMB = firstRevenueRMB + repeatRevenueRMB;
+
+    // 更新顶部结果
+    document.getElementById('projectedRevenueRMB').textContent = '¥' + Math.round(totalRevenueRMB).toLocaleString();
+
+    // 更新计算步骤
+    document.getElementById('step1').innerHTML = `1. 2025单商机成本 = ${spend2025RMB} ÷ ${leads2025} = <b>¥${costPerLead2025RMB.toFixed(2)}</b>`;
+    document.getElementById('step2').innerHTML = `2. 2026单商机成本 = ¥${costPerLead2025RMB.toFixed(2)} × (1 ${leadCostOpt >= 0 ? '+' : ''}${leadCostOpt.toFixed(1)}%) = <b>¥${costPerLead2026RMB.toFixed(2)}</b><br>&nbsp;&nbsp;&nbsp;&nbsp;2026商机数 = ${spend2026RMB} ÷ ¥${costPerLead2026RMB.toFixed(2)} = <b>${Math.round(leads2026)}</b>`;
+    document.getElementById('step3').innerHTML = `3. 2026转化率 = ${convRate2025.toFixed(1)}% × (1 + ${convUpside}%) = <b>${convRate2026.toFixed(1)}%</b><br>&nbsp;&nbsp;&nbsp;&nbsp;首单客户 = ${Math.round(leads2026)} × ${convRate2026.toFixed(1)}% = <b>${Math.round(firstCustomers2026)}</b>`;
+    document.getElementById('step4').innerHTML = `4. 2026笔单价 = <b>$${ticket2026USD.toFixed(1)}</b>（USD）<br>&nbsp;&nbsp;&nbsp;&nbsp;首单收入 = ${Math.round(firstCustomers2026)} × $${ticket2026USD.toFixed(1)} × 7 = <b>¥${Math.round(firstRevenueRMB).toLocaleString()}</b>`;
+    document.getElementById('step5').innerHTML = `5. 复购笔数 = ${Math.round(firstCustomers2026)} × ${repeatRatePct2025}% × ${repeatFreq2025} = ${Math.round(repeatOrders2026)}<br>&nbsp;&nbsp;&nbsp;&nbsp;复购收入 = ${Math.round(repeatOrders2026)} × $${ticket2026USD.toFixed(1)} × 7 = <b>¥${Math.round(repeatRevenueRMB).toLocaleString()}</b>`;
+    document.getElementById('step6').innerHTML = `6. 总销售额(RMB) = ¥${Math.round(firstRevenueRMB).toLocaleString()} + ¥${Math.round(repeatRevenueRMB).toLocaleString()} = <b>¥${Math.round(totalRevenueRMB).toLocaleString()}</b>`;
+  }
+
+  // 绑定输入事件
+  document.querySelectorAll('#spend2025RMB, #leads2025, #firstCustomers2025, #repeatRateInput2025, #repeatFreq2025, #revenue2025RMB').forEach(el => {
+    el.addEventListener('input', updateBase);
+  });
+  document.getElementById('spend2026RMB').addEventListener('input', updateProjection);
+  document.getElementById('ticketUpsideSlider').addEventListener('input', function() {
+    document.getElementById('ticketUpsideDisplay').textContent = '+' + this.value + '%';
+    updateProjection();
+  });
+  document.getElementById('convUpsideSlider').addEventListener('input', function() {
+    document.getElementById('convUpsideDisplay').textContent = '+' + this.value + '%';
+    updateProjection();
+  });
+  document.getElementById('leadCostOptSlider').addEventListener('input', function() {
+    const val = parseFloat(this.value);
+    document.getElementById('leadCostOptDisplay').textContent = (val >= 0 ? '+' : '') + val + '%';
+    updateProjection();
+  });
+</script>
+</body>
+</html>
